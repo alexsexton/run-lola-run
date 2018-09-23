@@ -4,17 +4,12 @@
 var gulp = require('gulp')
 var newer = require('gulp-newer')
 
-// Clean HTML
-// var htmlclean = require('gulp-htmlclean')
-
 // Optimise images and SVG
 var imagemin = require('gulp-imagemin')
 var svgmin = require('gulp-svgmin')
 
-// require
-// var rjs = require('gulp-requirejs')
-
 // JS Tasks
+var babel = require('gulp-babel')
 var concat = require('gulp-concat')
 var deporder = require('gulp-deporder')
 var stripdebug = require('gulp-strip-debug')
@@ -53,21 +48,6 @@ gulp.task('svgmin', function () {
     .pipe(gulp.dest(out))
 })
 
-// HTML Cleas
-
-// gulp.task('html', ['images'], function () {
-//   var out = folder.build + 'html/'
-//   var page = gulp.src(folder.src + 'html/**/*')
-//     .pipe(newer(out))
-//
-//   // minify production code
-//   if (!devBuild) {
-//     page = page.pipe(htmlclean())
-//   }
-//
-//   return page.pipe(gulp.dest(out))
-// })
-
 // CSS processing
 gulp.task('css', ['images'], function () {
   var postCssOpts = [
@@ -91,23 +71,28 @@ gulp.task('css', ['images'], function () {
     .pipe(gulp.dest(folder.build))
 })
 
-// require
-
-// JavaScript processing
-gulp.task('js', function () {
-  var jsbuild = gulp.src([
+// Babel processing
+gulp.task('babel', function () {
+  gulp.src([
     folder.src + 'js/lib/*',
-    folder.src + 'js/plugins/*',
     folder.src + 'js/*'
-  ]) // <- Multiple files need to go in an array
+  ])
+    .pipe(babel())
     .pipe(deporder())
     .pipe(concat('main.js'))
+    .pipe(gulp.dest(folder.build))
+})
 
-  // if (!devBuild) {
-  //   jsbuild = jsbuild
-  //     .pipe(stripdebug())
-  //     .pipe(uglify())
-  // }
+// JavaScript processing
+gulp.task('js', ['babel'], function () {
+  var jsbuild = gulp.src([
+    folder.src + 'js/plugins/*',
+    folder.src + 'js/lib/*',
+    folder.src + 'js/main.js'
+  ]) // <- Multiple files need to go in an array
+    .pipe(babel())
+    .pipe(deporder())
+    .pipe(concat('main.min.js'))
 
   jsbuild = jsbuild
     .pipe(stripdebug())
@@ -117,14 +102,14 @@ gulp.task('js', function () {
 })
 
 // run all tasks
-gulp.task('run', ['images', 'css', 'js'])
+gulp.task('run', ['images', 'css', 'babel', 'js'])
 
 // watch for changes
 gulp.task('watch', function () {
   // image changes
   gulp.watch(folder.src + 'images/**/*', ['images'])
   // javascript changes
-  gulp.watch(folder.src + 'js/**/*', ['js'])
+  gulp.watch(folder.src + 'js/**/*', ['babel', 'js'])
   // css changes
   gulp.watch(folder.src + 'scss/**/*', ['css'])
 })
