@@ -14,8 +14,8 @@ Clone this, change the repo and package name then drop into the templates direct
 
 ## Assumptions
 
-You're file tree has a `src` folder containing `images`, `js` and `scss` which is where you do your work
+Your file tree has a `src` folder containing `images`, `js` and `scss` which is where you do your work
 
 The tasks builds to an `assets` folder everything gets dumped in there because in this instance it's because it's for a Shopify build. Also everything goes into a single level folder. No sub folders. Because Shopify
 
-Change this to suit your development style. 
+Change this to suit your development style.
