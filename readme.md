@@ -4,9 +4,9 @@ A basic Gulp 4 starting point.
 
 ## Dependencies
 
-Latest versions of node and npm then run:
+You'll need the latest stable versions of node and npm then run:
 
-`npm install -g gulp-cli` to install gulp-cli globally.
+`npm install -g gulp-cli` If you don't have gulp-cli installed globally.
 
 ## Installation
 
@@ -14,16 +14,14 @@ Clone this repo, change the repo and package name then drop into the templates d
 
 Then run: `npm install`
 
-Happy coding
+## Using this
 
-## Assumptions
+Do your work in the `assets` folder which contains separate `images`, `js` and `scss` folders
 
-Do you work in the `assets` folder which contains `images`, `js` and `scss`.
+The task then builds to the `static` folder. Obviously you can change this to suit your development style and/or platform.
 
-The task then builds to the `static` folder.
-
-Change this to suit your development style.
+To add new packages from the command line like type `npm install jquery --save` to install jquery for example. This creates a dependency in the `package.json` file.
 
 Don't blame me if it doesn't work.
 
-Peace
+Happy coding. Peace
