@@ -1,22 +1,26 @@
 # Run Lola Run
 
-This is WIP of my new dev environment. Switching from Grunt/Bower to Gulp.
+A basic Gulp 4 starting point.
 
 ## Dependencies
 
 Latest versions of node and npm then run:
 
-`npm install -g gulp-cli`
+`npm install -g gulp-cli` to install gulp-cli globally.
 
 ## Installation
 
-Clone this, change the repo and package name then drop into the templates directory of Craft / Shopify (for example). Then run: `npm install`.
+Clone this repo, change the repo and package name then drop into the templates directory of your favourite CMS.
+
+Then run: `npm install`
+
+Happy coding
 
 ## Assumptions
 
-Your file tree has a `src` folder containing `images`, `js` and `scss` which is where you do your work
+Do you work in the `assets` folder which contains `images`, `js` and `scss`.
 
-The task builds to an `assets` folder. Everything gets dumped in there because in this instance it's for a Shopify build, so everything goes into a single level folder. No sub folders. Because Shopify
+The task then builds to the `static` folder.
 
 Change this to suit your development style.
 

@@ -1,4 +1,4 @@
-// Gulp.js configuration
+// Gulp (4) configuration
 
 // Modules
 var gulp = require('gulp')
@@ -23,17 +23,14 @@ var autoprefixer = require('autoprefixer')
 var mqpacker = require('css-mqpacker')
 var cssnano = require('cssnano')
 
-// development mode?
-var devBuild = (process.env.NODE_ENV !== 'production')
-
 var folder = {
-  src: 'src/',
-  build: 'assets/'
+  src: 'assets/',
+  build: 'static/'
 }
 
 // image processing
 gulp.task('images', function () {
-  var out = folder.build
+  var out = folder.build + 'images/'
   return gulp.src(folder.src + 'images/*')
     .pipe(newer(out))
     .pipe(imagemin({ optimizationLevel: 5 }))
@@ -42,23 +39,20 @@ gulp.task('images', function () {
 
 // SVG min
 gulp.task('svgmin', function () {
-  var out = folder.build
+  var out = folder.build + 'images/'
   return gulp.src(folder.src + 'images/*')
     .pipe(svgmin())
     .pipe(gulp.dest(out))
 })
 
 // CSS processing
-gulp.task('css', ['images'], function () {
+gulp.task('css', gulp.series('images', function () {
   var postCssOpts = [
     assets({ loadPaths: ['assets/'] }),
-    autoprefixer({ browsers: ['last 2 versions', '> 2%'] }),
+    autoprefixer,
     mqpacker
   ]
-
-  if (!devBuild) {
-    postCssOpts.push(cssnano)
-  }
+  postCssOpts.push(cssnano)
 
   return gulp.src(folder.src + 'scss/styles.scss')
     .pipe(sass({
@@ -69,10 +63,10 @@ gulp.task('css', ['images'], function () {
     }))
     .pipe(postcss(postCssOpts))
     .pipe(gulp.dest(folder.build))
-})
+}))
 
 // Babel processing
-gulp.task('babel', function () {
+gulp.task('babel', function (done) {
   gulp.src([
     folder.src + 'js/lib/*',
     folder.src + 'js/*'
@@ -81,10 +75,11 @@ gulp.task('babel', function () {
     .pipe(deporder())
     .pipe(concat('main.js'))
     .pipe(gulp.dest(folder.build))
+  done()
 })
 
 // JavaScript processing
-gulp.task('js', ['babel'], function () {
+gulp.task('js', gulp.series('babel', function () {
   var jsbuild = gulp.src([
     folder.src + 'js/plugins/*',
     folder.src + 'js/lib/*',
@@ -99,20 +94,20 @@ gulp.task('js', ['babel'], function () {
     .pipe(uglify())
 
   return jsbuild.pipe(gulp.dest(folder.build))
-})
+}))
 
 // run all tasks
-gulp.task('run', ['images', 'css', 'babel', 'js'])
+gulp.task('run', gulp.series('images', 'css', 'babel', 'js'))
 
 // watch for changes
-gulp.task('watch', function () {
+gulp.task('watch', gulp.series('run', function () {
   // image changes
-  gulp.watch(folder.src + 'images/**/*', ['images'])
+  gulp.watch(folder.src + 'images/**/*', gulp.series('images'))
   // javascript changes
-  gulp.watch(folder.src + 'js/**/*', ['babel', 'js'])
+  gulp.watch(folder.src + 'js/**/*', gulp.series('babel', 'js'))
   // css changes
-  gulp.watch(folder.src + 'scss/**/*', ['css'])
-})
+  gulp.watch(folder.src + 'scss/**/*', gulp.series('css'))
+}))
 
 // default task
-gulp.task('default', ['run', 'watch'])
+gulp.task('default', gulp.series('run'))
