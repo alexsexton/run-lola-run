@@ -20,12 +20,16 @@ var sass = require('gulp-sass')
 var postcss = require('gulp-postcss')
 var assets = require('postcss-assets')
 var autoprefixer = require('autoprefixer')
-var mqpacker = require('css-mqpacker')
 var cssnano = require('cssnano')
 
 var folder = {
   src: 'assets/',
   build: 'static/'
+}
+
+// Change the path below to your main scss file
+var file = {
+  scss: 'scss/styles.scss'
 }
 
 // image processing
@@ -49,12 +53,11 @@ gulp.task('svgmin', function () {
 gulp.task('css', gulp.series('images', function () {
   var postCssOpts = [
     assets({ loadPaths: ['assets/'] }),
-    autoprefixer,
-    mqpacker
+    autoprefixer
   ]
   postCssOpts.push(cssnano)
 
-  return gulp.src(folder.src + 'scss/styles.scss')
+  return gulp.src(folder.src + file.scss)
     .pipe(sass({
       outputStyle: 'nested',
       imagePath: 'images/',
@@ -81,7 +84,6 @@ gulp.task('babel', function (done) {
 // JavaScript processing
 gulp.task('js', gulp.series('babel', function () {
   var jsbuild = gulp.src([
-    folder.src + 'js/plugins/*',
     folder.src + 'js/lib/*',
     folder.src + 'js/main.js'
   ]) // <- Multiple files need to go in an array
