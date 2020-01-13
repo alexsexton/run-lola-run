@@ -3,6 +3,7 @@
 // Modules
 var gulp = require('gulp')
 var newer = require('gulp-newer')
+var del = require('del')
 
 // Optimise images and SVG
 var imagemin = require('gulp-imagemin')
@@ -31,6 +32,11 @@ var folder = {
 var file = {
   scss: 'scss/styles.scss'
 }
+
+// Clean
+gulp.task('clean', function () {
+  return del([folder.build + 'styles.css', folder.build + 'main.js', folder.build + 'main.min.js'], { force: true })
+})
 
 // image processing
 gulp.task('images', function () {
@@ -99,7 +105,7 @@ gulp.task('js', gulp.series('babel', function () {
 }))
 
 // run all tasks
-gulp.task('run', gulp.series('images', 'css', 'babel', 'js'))
+gulp.task('run', gulp.series('clean', 'images', 'css', 'babel', 'js'))
 
 // watch for changes
 gulp.task('watch', gulp.series('run', function () {
