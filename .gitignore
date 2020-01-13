@@ -1,0 +1,20 @@
+# Ignore the following #
+
+.DS_STORE
+.vagrant
+web.config
+Vagrantfile
+readme.txt
+node_modules
+package-lock.json
+
+# CMS files #
+
+# OS generated files #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
