@@ -14,7 +14,7 @@ var babel = require('gulp-babel')
 var concat = require('gulp-concat')
 var deporder = require('gulp-deporder')
 var stripdebug = require('gulp-strip-debug')
-var uglify = require('gulp-uglify')
+var terser = require('gulp-terser')
 
 // Sass Modules
 var sass = require('gulp-sass')
@@ -35,7 +35,9 @@ var file = {
 
 // Clean
 gulp.task('clean', function () {
-  return del([folder.build + 'styles.css', folder.build + 'main.js', folder.build + 'main.min.js'], { force: true })
+  return del([folder.build + 'styles.css', folder.build + 'main.js', folder.build + 'main.min.js'], {
+    force: true
+  })
 })
 
 // image processing
@@ -99,7 +101,7 @@ gulp.task('js', gulp.series('babel', function () {
 
   jsbuild = jsbuild
     .pipe(stripdebug())
-    .pipe(uglify())
+    .pipe(terser())
 
   return jsbuild.pipe(gulp.dest(folder.build))
 }))
