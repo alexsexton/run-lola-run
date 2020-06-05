@@ -1,4 +1,4 @@
-// Gulp (4) configuration
+// Gulp configuration
 
 // Modules
 var gulp = require('gulp')
@@ -12,7 +12,6 @@ var svgmin = require('gulp-svgmin')
 // JS Tasks
 var babel = require('gulp-babel')
 var concat = require('gulp-concat')
-var deporder = require('gulp-deporder')
 var stripdebug = require('gulp-strip-debug')
 var terser = require('gulp-terser')
 
@@ -29,15 +28,13 @@ var folder = {
 }
 
 // Change the path below to your main scss file
-var file = {
-  scss: 'scss/styles.scss'
+var styles = {
+  scss: 'scss/main.scss'
 }
 
 // Clean
 gulp.task('clean', function () {
-  return del([folder.build + 'styles.css', folder.build + 'main.js', folder.build + 'main.min.js'], {
-    force: true
-  })
+  return del([folder.build + 'main.css', folder.build + 'main.js', folder.build + 'main.min.js'], { force: true })
 })
 
 // image processing
@@ -65,7 +62,7 @@ gulp.task('css', gulp.series('images', function () {
   ]
   postCssOpts.push(cssnano)
 
-  return gulp.src(folder.src + file.scss)
+  return gulp.src(folder.src + styles.scss)
     .pipe(sass({
       outputStyle: 'nested',
       imagePath: 'images/',
@@ -83,7 +80,6 @@ gulp.task('babel', function (done) {
     folder.src + 'js/*'
   ])
     .pipe(babel())
-    .pipe(deporder())
     .pipe(concat('main.js'))
     .pipe(gulp.dest(folder.build))
   done()
@@ -96,7 +92,6 @@ gulp.task('js', gulp.series('babel', function () {
     folder.src + 'js/main.js'
   ]) // <- Multiple files need to go in an array
     .pipe(babel())
-    .pipe(deporder())
     .pipe(concat('main.min.js'))
 
   jsbuild = jsbuild
