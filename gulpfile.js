@@ -1,26 +1,31 @@
-// Gulp configuration
+// Gulp (4) configuration
 
 // Modules
-var gulp = require('gulp')
-var newer = require('gulp-newer')
-var del = require('del')
+import gulp from 'gulp'
+import newer from 'gulp-newer'
+
+// Clean
+import del from 'del'
 
 // Optimise images and SVG
-var imagemin = require('gulp-imagemin')
-var svgmin = require('gulp-svgmin')
+import imagemin from 'gulp-imagemin'
+import svgmin from 'gulp-svgmin'
 
 // JS Tasks
-var babel = require('gulp-babel')
-var concat = require('gulp-concat')
-var stripdebug = require('gulp-strip-debug')
-var terser = require('gulp-terser')
+import babel from 'gulp-babel'
+import concat from 'gulp-concat'
+import stripdebug from 'gulp-strip-debug'
+import terser from 'gulp-terser'
 
 // Sass Modules
-var sass = require('gulp-sass')
-var postcss = require('gulp-postcss')
-var assets = require('postcss-assets')
-var autoprefixer = require('autoprefixer')
-var cssnano = require('cssnano')
+import gulpsass from 'gulp-sass'
+import dartsass from 'sass'
+import postcss from 'gulp-postcss'
+import assets from 'postcss-assets'
+import autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
+
+const sass = gulpsass(dartsass)
 
 var folder = {
   src: 'assets/',
@@ -115,3 +120,7 @@ gulp.task('watch', gulp.series('run', function () {
 
 // default task
 gulp.task('default', gulp.series('run'))
+
+
+// default task
+exports.default = gulp.series(exports.build, exports.watch)
